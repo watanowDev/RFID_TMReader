@@ -66,6 +66,16 @@ mercuryapi_result_t mercuryapi_read_epcs(
     int* out_count,       // [out] 읽힌 태그 개수
     int timeout_ms);
 
+mercuryapi_result_t mercuryapi_get_read_power_dbm(
+    mercuryapi_reader_t* reader,
+    int* out_read_power_dbm);
+    
+// 안테나 포트 체크 사용 여부 설정
+// enable=1: 체크(기본값일 수 있음) / enable=0: 체크 끔
+mercuryapi_result_t mercuryapi_set_antenna_check_port(
+    mercuryapi_reader_t* reader,
+    int enable);
+
 // 버전
 const char* mercuryapi_version_string(void);
 

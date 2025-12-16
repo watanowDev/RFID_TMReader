@@ -147,6 +147,7 @@ int main(int argc, char** argv)
   }
 
   /* ---- antennas ---- */
+  // int ants[1] = {1 };
   int ants[2] = {1, 2};
   printf("[CALL] mercuryapi_set_read_plan_gen2(reader, {1,2}, 2, -1)\n");
   last_rc = mercuryapi_set_read_plan_gen2(reader, ants, 2, -1);
@@ -161,6 +162,12 @@ int main(int argc, char** argv)
     return 1;
   }
 
+  printf("[CALL] mercuryapi_set_antenna_check_port(reader, 0)\n");
+  last_rc = mercuryapi_set_antenna_check_port(reader, 0);
+  printf("[RET ] mercuryapi_set_antenna_check_port => %s(%d)\n",
+         rc_to_str(last_rc), (int)last_rc);
+
+
   printf("[MAIN] Connected. Reading loop start. (ESC to stop)\n");
 
   /* ---- read loop ---- */
@@ -171,13 +178,6 @@ int main(int argc, char** argv)
 
   for (int t = 0; t < MAX_TAGS_PER_READ; ++t)
     epc_ptrs[t] = epc_storage[t];
-
-  // /* 안테나별 식별 필요해서 1개씩 번갈아 plan 설정 */
-  // last_rc = mercuryapi_set_read_plan_gen2(reader, ants, 2, -1);
-  // if (last_rc != MERCURYAPI_OK)
-  // {
-  //   usleep(200 * 1000);
-  // }
 
   while (!esc_pressed())
   {
@@ -192,6 +192,21 @@ int main(int argc, char** argv)
         usleep(200 * 1000);
         continue;
       }
+
+      usleep(100 * 1000); 
+
+      // int read_power_dbm = 0;
+      // mercuryapi_result_t prc = mercuryapi_get_read_power_dbm(reader, &read_power_dbm);
+      // if (prc == MERCURYAPI_OK) {
+      //   // cdbm -> dBm로 보고 싶으면 /100.0 출력
+      //   printf("[INFO] ant=%d read_power_dbm=%d (%.2f dBm)\n",
+      //         ant, read_power_dbm, read_power_dbm / 100.0);
+      // } else {
+      //   printf("[WARN] ant=%d get_read_power_dbm failed: %s(%d)\n",
+      //         ant, rc_to_str(prc), (int)prc);
+      // }
+
+      // usleep(100 * 1000);
 
       /* 매번 버퍼 초기화 */
       for (int t = 0; t < MAX_TAGS_PER_READ; ++t)

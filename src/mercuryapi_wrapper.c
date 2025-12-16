@@ -161,17 +161,17 @@ mercuryapi_result_t mercuryapi_set_read_plan_gen2(
   }
 
   
-  /* ✅ read power 적용: -1이면 변경 안 함 */
-  if (read_power_dbm >= 0) {
-    /* ThingMagic는 일반적으로 centi-dBm(= 1/100 dBm) 단위를 사용 */
-    int32_t power_cdbm = (int32_t)read_power_dbm;
+  // /* ✅ read power 적용: -1이면 변경 안 함 */
+  // if (read_power_dbm >= 0) {
+  //   /* ThingMagic는 일반적으로 centi-dBm(= 1/100 dBm) 단위를 사용 */
+  //   int32_t power_cdbm = (int32_t)read_power_dbm;
 
-    st = TMR_paramSet(&reader->reader, TMR_PARAM_RADIO_READPOWER, &power_cdbm);
-    if (st != TMR_SUCCESS) {
-      mercuryapi__log_tmr_error(&reader->reader, st, "TMR_paramSet(RADIO_READPOWER)");
-      return map_status_ex(st);
-    }
-  }
+  //   st = TMR_paramSet(&reader->reader, TMR_PARAM_RADIO_READPOWER, &power_cdbm);
+  //   if (st != TMR_SUCCESS) {
+  //     mercuryapi__log_tmr_error(&reader->reader, st, "TMR_paramSet(RADIO_READPOWER)");
+  //     return map_status_ex(st);
+  //   }
+  // }
 
   return MERCURYAPI_OK;
 }
@@ -305,4 +305,43 @@ mercuryapi_result_t mercuryapi_read_epcs(
 
   *out_count = n;
   return (n > 0) ? MERCURYAPI_OK : MERCURYAPI_ERR_NO_TAG;
+}
+
+mercuryapi_result_t mercuryapi_get_read_power_dbm(
+    mercuryapi_reader_t* reader,
+    int* out_read_power_dbm)
+{
+  if (!reader || !out_read_power_dbm)
+    return MERCURYAPI_ERR_INVALID_ARG;
+  if (!reader->connected)
+    return MERCURYAPI_ERR_NOT_CONNECTED;
+
+  int32_t power_cdbm = 0;
+  TMR_Status st = TMR_paramGet(&reader->reader, TMR_PARAM_RADIO_READPOWER, &power_cdbm);
+  if (st != TMR_SUCCESS) {
+    mercuryapi__log_tmr_error(&reader->reader, st, "TMR_paramGet(RADIO_READPOWER)");
+    return map_status_ex(st);
+  }
+
+  *out_read_power_dbm = (int)power_cdbm;
+  return MERCURYAPI_OK;
+}
+
+mercuryapi_result_t mercuryapi_set_antenna_check_port(
+    mercuryapi_reader_t* reader,
+    int enable)
+{
+  if (!reader) return MERCURYAPI_ERR_INVALID_ARG;
+  if (!reader->connected) return MERCURYAPI_ERR_NOT_CONNECTED;
+
+  // TMR_bool 대신 정수 0/1 사용
+  int32_t v = (enable != 0) ? 1 : 0;
+
+  TMR_Status st = TMR_paramSet(&reader->reader, TMR_PARAM_ANTENNA_CHECKPORT, &v);
+  if (st != TMR_SUCCESS) {
+    mercuryapi__log_tmr_error(&reader->reader, st, "TMR_paramSet(ANTENNA_CHECKPORT)");
+    return map_status_ex(st);
+  }
+
+  return MERCURYAPI_OK;
 }
