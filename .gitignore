@@ -1,0 +1,18 @@
+# Build outputs
+/build-debug/
+/build-release/
+/install-debug/
+/install-release/
+
+# Doxygen
+/Doxyfile
+/*.zip
+
+# IDE
+.idea/
+
+# 기타 임시/캐시
+*.log
+*.tmp
+*~
+.DS_Store

@@ -1,0 +1,16 @@
+{
+  "enable": true,
+  "uri": "tmr:///dev/ttyUSB0",
+  "region": "KR2",
+  "antennas": [1, 2],
+  "plan_timeout_ms": 500,
+  "capacity": 128,
+
+  "write_power_cdbm": 2700,
+
+  "read_timeout_ms": 1000,
+
+  "loop": true,
+  "loop_interval_ms": 750,
+  "loop_count": 20
+}
