@@ -24,113 +24,114 @@
     - C++ Wrapper: C++17
 
 ---
-
 ## 프로젝트 구조
 
 ```
 .
-├── c_only
-├── cpp_only
-├── c_test_only
-├── cpp_test_only
-├── include
-├── src
-├── third_party
-│   └── mercuryapi
-│       ├── api
-│       └── c
+├── c_lib
+│   └── api
+├── cpp_lib
+│   └── api
+├── cpp_test
+│   ├── config
+│   └── src
+├── c_test
+│   └── src
+├── install
+│   ├── debug
+│   │   ├── include
+│   │   │   └── rfid
+│   │   │       ├── mercuryapi
+│   │   │       └── mercuryapi_cpp
+│   │   └── lib
+│   │       └── rfid
+│   │           ├── mercuryapi
+│   │           └── mercuryapi_cpp
+│   └── release
+│       ├── include
+│       │   └── rfid
+│       │       ├── mercuryapi
+│       │       └── mercuryapi_cpp
+│       └── lib
+│           └── rfid
+│               ├── mercuryapi
+│               └── mercuryapi_cpp
+└── third_party
+    └── mercuryapi
+        └── c
+            ├── include
+            └── src
 ├── CMakeLists.txt
 └── README.md
 ```
 
 ### 디렉터리 설명
 
-| 디렉터리 | 설명 |
-|---------|------|
-| `c_only` | C99 기반 C 래퍼 라이브러리 (`.so`) 생성용 CMake 프로젝트 |
-| `cpp_only` | C99 + C++17 기반 C++ 래퍼 라이브러리 (`.so`) 생성용 CMake 프로젝트 |
-| `c_test_only` | `c_only` 래퍼 테스트 프로젝트 |
-| `cpp_test_only` | `cpp_only` 래퍼 테스트 프로젝트 |
-| `include` | `cpp_only`에서 사용하는 C++ 래퍼 클래스 헤더 |
-| `src` | `cpp_only`에서 사용하는 C++ 래퍼 구현 소스 |
-| `third_party/mercuryapi/api` | C 래퍼 인터페이스 계층 |
-| `third_party/mercuryapi/c` | ThingMagic MercuryAPI C API 원본 SDK |
+| 디렉터리                     | 설명                                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| c_lib                    | C99 기반 C 래퍼 라이브러리 (.so) 생성용 CMake 프로젝트. `libmercuryapi.so` / `libmercuryapi_d.so` 생성                   |
+| cpp_lib                  | C99 + C++17 기반 C++ 래퍼 라이브러리 (.so) 생성용 CMake 프로젝트. `libmercuryapi_cpp.so` / `libmercuryapi_cpp_d.so` 생성 |
+| c_test                   | `c_lib` 결과물 테스트 프로젝트                                                                                   |
+| cpp_test                 | `cpp_lib` 결과물 테스트 프로젝트                                                                                 |
+| c_lib/api                | C 래퍼 인터페이스 파일 (`rfid_api.h`, `rfid_types.h`, `rfid_api.c`)                                             |
+| cpp_lib/api              | C++ 래퍼 클래스 파일 (`mercuryapi.hpp`, `mercuryapi.cpp`)                                                     |
+| cpp_test/config          | C++ 테스트 프로젝트 설정 파일                                                                                     |
+| cpp_test/src             | C++ 테스트 코드                                                                                             |
+| c_test/src               | C 테스트 코드                                                                                               |
+| install/debug            | 디버깅용 빌드 결과물. `include`와 `lib` 하위에 각각 `rfid/mercuryapi`와 `rfid/mercuryapi_cpp` 결과물이 존재                  |
+| install/release          | 배포용 빌드 결과물. 구조는 debug와 동일하지만 최적화된 릴리스 빌드                                                               |
+| third_party/mercuryapi/c | ThingMagic MercuryAPI C SDK 원본 코드 (`include`와 `src`)                                                   |
+
+### 비고
+
+* `c_lib`는 순수 C99만 사용합니다.
+* `cpp_lib`는 C++17 + C99를 사용합니다.
+* `install/debug`와 `install/release`는 디버깅용과 배포용 라이브러리를 구분하여 관리합니다.
+* `install/debug(or release)/rfid/mercuryapi`는 `c_lib` 결과물이 이관되며, `install/debug(or release)/rfid/mercuryapi_cpp`는 `cpp_lib` 결과물이 이관됩니다.
 
 ---
+## 빌드 구조 (CLion 전용)
 
-## CMake 빌드 구조
+이 프로젝트는 **CLion에서 빌드와 install 경로 설정만으로** 빌드가 완료되도록 구성되어 있습니다.
 
-본 프로젝트는 **루트 CMakeLists.txt의 옵션(option)으로 서브 타깃을 1개만 선택하여 빌드하는 구조**를 사용합니다.
+### 특징
 
-루트 `CMakeLists.txt`에는 다음 옵션이 있으며, **네 개 중 정확히 하나만 `ON`**이어야 합니다.
+* `install` 폴더는 빌드 시 **자동 생성**됩니다.
+* Build 경로와 install 경로를 지정하려면 하기의 방법을 따릅니다.
 
-```cmake
-option(BUILD_C_ONLY     "Build mercuryapi only" OFF)
-option(BUILD_CPP_ONLY   "Build mercuryapi_cpp only" OFF)
-option(BUILD_C_TEST     "Build C test executable only" OFF)
-option(BUILD_CPP_TEST   "Build C++ test executable only" ON)
+#### Build 경로 설정
+
+1. 동일하게 CLion 설정 열기 (단축키: `Ctrl+Alt+S`)
+2. **빌드, 실행, 배포** 탭 선택 → **CMake** 탭 선택
+3. 하단 위치한 **[빌드 디렉터리]** 입력
+
+```
+build/debug  # 또는 release
 ```
 
-- 동시에 2개 이상을 `ON`으로 설정하면 **예외 처리로 CMake 단계에서 빌드가 중단**되도록 되어 있습니다.
-- 빌드 타깃 변경은 **CMake 캐시를 갱신(리로드/리컨피그)** 해야 정확히 반영됩니다.
+#### Install 경로 설정
 
----
+1. CLion 설정 열기 (단축키: `Ctrl+Alt+S`)
+2. **빌드, 실행, 배포** 탭 선택 → **CMake** 탭 선택
+3. 상단 위치한 **[CMake 옵션] Edit**란에 아래 입력
 
-## 빌드 절차 (중요)
-
-빌드 타깃 옵션을 변경한 경우, 아래 순서를 반드시 지켜야 합니다.
-
-1. CMake Cache Reload (또는 re-configure)
-2. Re-build
-3. (필요 시) Install 명령 실행
-
-> **각 테스트 코드는 install 경로에서 library를 참조**하도록 설계되었습니다.  
-> `install-debug/`, `install-release/`는 **빌드 시 자동 생성되지 않습니다.**  
-> 터미널에서 **`cmake --build {build paths} --target install`** 명령을 실행해야 생성됩니다.  
-
----
-
-## 빌드 방법
-
-### 공통 규칙: 옵션은 1개만 ON
-
-아래 4개 중 **하나만** `ON`으로 지정하세요.
-
-- `-DBUILD_C_ONLY=ON`
-- `-DBUILD_CPP_ONLY=ON`
-- `-DBUILD_C_TEST=ON`
-- `-DBUILD_CPP_TEST=ON`
-
----
-
-### CLion에서 빌드하는 경우
-
-CLion을 사용하더라도 **옵션은 CMake profile의 CMake options에 지정**해야 합니다.
-
-- 예: `-DBUILD_CPP_TEST=ON`
-
-빌드 타깃을 바꿨다면 반드시 다음을 수행하세요.
-
-1) **Reload CMake Project** (캐시 갱신)
-
-2) **Build**
-
-> Install은 CLion 메뉴가 아니라, 위의 터미널 명령(`cmake --install ...`)으로 수행하는 것을 권장합니다.
+```
+-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_SOURCE_DIR}/install/debug  # 또는 release
+```
 
 ---
 
 ## Install 결과물
 
-| 디렉터리 | 설명 |
-|---------|------|
-| `install-debug` | Debug 빌드 결과물 |
-| `install-release` | Release 빌드 결과물 |
+| 디렉터리              | 설명 |
+|-------------------|------|
+| `install/debug`   | Debug 빌드 결과물 |
+| `install/release` | Release 빌드 결과물 |
 
 해당 디렉터리에는 다음 항목들이 포함됩니다.
 
 - 공유 라이브러리 (`.so`)
-- 헤더 파일
-- CMake 패키지 설정 파일
+- 헤더 파일 (`.h`)
 
 ---
 
@@ -140,10 +141,8 @@ CLion을 사용하더라도 **옵션은 CMake profile의 CMake options에 지정
 
 테스트 대상 프로젝트:
 
-- `c_test_only`
-- `cpp_test_only`
-
-별도의 커맨드라인 실행 방법은 제공하지 않습니다.
+- `c_test`
+- `cpp_test`
 
 ---
 

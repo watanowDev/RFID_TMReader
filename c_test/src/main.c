@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 
     const RFID_REGION region = RFID_REGION_AUTO;
     const int plan_timeout_ms = 300;
-    const int read_power_dbm = 30; /* 30.00 dBm */
+    const int read_power_cdbm = 3000; /* 30.00 dBm */
 
     const int read_timeout_ms = 500;
     const int loop = 1; /* 0: 단발, 1: 루프 */
@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
     params.antennas = antennas;
     params.antenna_count = antenna_count;
     params.plan_timeout_ms = plan_timeout_ms;
-    params.read_power_dbm = read_power_dbm;
+    params.write_power_cdbm = read_power_cdbm;
 
     printf("[INFO] uri=%s region=%s antennas=%d\n", uri, rfid_region_to_string(region), antenna_count);
 

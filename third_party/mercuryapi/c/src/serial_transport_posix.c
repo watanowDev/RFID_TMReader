@@ -86,6 +86,8 @@ static TMR_Status
 s_sendBytes(TMR_SR_SerialTransport *this, uint32_t length, 
             uint8_t* message, const uint32_t timeoutMs)
 {
+  (void)timeoutMs; /* Unused parameter */
+
   TMR_SR_SerialPortNativeContext *c;
   int ret;
 

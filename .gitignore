@@ -1,6 +1,8 @@
 # Build outputs
 /build-debug/
 /build-release/
+/build/debug/
+/build/release/
 
 # Doxygen
 /Doxyfile

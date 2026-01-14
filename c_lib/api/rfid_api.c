@@ -14,7 +14,6 @@
 #include "tmr_tag_data.h"
 #include "tmr_tag_protocol.h"
 #include "tmr_status.h"
-#include "../c/include/tmr_status.h"
 
 // 내부 상수
 #define RFID_DEFAULT_PLAN_READTIME (1000U)

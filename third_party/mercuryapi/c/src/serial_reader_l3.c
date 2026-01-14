@@ -1775,6 +1775,8 @@ TMR_Status
 TMR_SR_cmdWriteGen2TagEpc(TMR_Reader *reader, const TMR_TagFilter *filter, TMR_GEN2_Password accessPassword, 
 					  uint16_t timeout, uint8_t count, const uint8_t *id, bool lock)
 {
+  (void)lock; /* Unused parameter */
+
   TMR_Status ret;
   uint8_t msg[TMR_SR_MAX_PACKET_SIZE];
   uint8_t i, optbyte;
@@ -1836,6 +1838,8 @@ TMR_SR_cmdReadAfterWriteGen2TagEpc(TMR_Reader *reader, const TMR_TagFilter *filt
                                    uint16_t timeout, uint8_t count, const uint8_t *id, bool lock, uint32_t readBank,
                                    uint32_t readAddress, uint8_t readLen, TMR_TagReadData *read)
 {
+  (void)lock; /* Unused parameter */
+
   TMR_Status ret;
   uint8_t msg[TMR_SR_MAX_PACKET_SIZE];
   uint8_t i, optbyte;
@@ -3263,6 +3267,8 @@ TMR_Status TMR_SR_cmdSetProtocolLicenseKey(TMR_Reader *reader,
                                            TMR_SR_SetProtocolLicenseOption option, 
                                            uint8_t key[], int key_len, uint32_t *retData)
 {
+  (void)retData; /* Unused parameter */
+
   uint8_t msg[TMR_SR_MAX_PACKET_SIZE];
   uint8_t i;
   TMR_Status ret;
@@ -4978,6 +4984,8 @@ filterbytes(TMR_TagProtocol protocol, const TMR_TagFilter *filter,
 void TMR_SR_msgAddHiggs2PartialLoadImage(uint8_t *msg, uint8_t *i, uint16_t timeout,
       TMR_GEN2_Password accessPassword, TMR_GEN2_Password killPassword, uint8_t len, const uint8_t *epc, TMR_TagFilter* target)
 {
+  (void)target; /* Unused parameter */
+
   SETU8(msg, *i, TMR_SR_OPCODE_WRITE_TAG_SPECIFIC);
   SETU16(msg, *i, timeout);
   SETU8(msg, *i, (uint8_t)TMR_SR_GEN2_ALIEN_HIGGS_SILICON);  /* Chip - type*/
@@ -5026,6 +5034,8 @@ TMR_Status TMR_SR_cmdHiggs2PartialLoadImage(TMR_Reader *reader, uint16_t timeout
 void TMR_SR_msgAddHiggs2FullLoadImage(uint8_t *msg, uint8_t *i, uint16_t timeout,
       TMR_GEN2_Password accessPassword, TMR_GEN2_Password killPassword, uint16_t lockBits, uint16_t pcWord, uint8_t len, const uint8_t *epc, TMR_TagFilter* target)
 {
+  (void)target; /* Unused parameter */
+
   SETU8(msg, *i, TMR_SR_OPCODE_WRITE_TAG_SPECIFIC);
   SETU16(msg, *i, timeout);
   SETU8(msg, *i, (uint8_t)TMR_SR_GEN2_ALIEN_HIGGS_SILICON);  /* Chip - type*/
@@ -5444,6 +5454,8 @@ TMR_Status TMR_SR_cmdNxpChangeEas(TMR_Reader *reader, uint16_t timeout,
 void TMR_SR_msgAddNXPEASAlarm(uint8_t *msg, uint8_t *i, uint16_t timeout, 
                 TMR_SR_GEN2_SiliconType chip, TMR_GEN2_DivideRatio dr, TMR_GEN2_TagEncoding m, TMR_GEN2_TrExt trExt, TMR_TagFilter* target)
 {
+  (void)target; /* Unused parameter */
+
   SETU8(msg, *i, TMR_SR_OPCODE_WRITE_TAG_SPECIFIC);
   SETU16(msg, *i, timeout);
   SETU8(msg, *i, (uint8_t)chip);  /* Chip - type*/
@@ -5796,6 +5808,8 @@ TMR_Status TMR_SR_cmdGen2v2NXPUntraceable(TMR_Reader *reader, uint16_t timeout,
 										  TMR_SR_GEN2_SiliconType chip, TMR_GEN2_Password accessPassword, uint16_t configWord,
 										  TMR_TagOp_GEN2_NXP_Untraceable op,TMR_uint8List *data, TMR_TagFilter* target)
 {
+  (void)data; /* Unused parameter */
+
 	TMR_Status ret;
 	uint8_t msg[TMR_SR_MAX_PACKET_SIZE];
 	uint8_t i;
@@ -6162,6 +6176,8 @@ TMR_Status TMR_SR_msgAddMonza6MarginRead(uint8_t *msg, uint8_t *i, uint16_t time
 TMR_Status TMR_SR_cmdMonza6MarginRead(TMR_Reader *reader, uint16_t timeout, TMR_SR_GEN2_SiliconType chip, TMR_GEN2_Password accessPassword,
                                       TMR_GEN2_Bank bank, uint32_t bitAddress, uint16_t maskBitLength, uint8_t *mask, TMR_TagFilter *filter)
 {
+  (void)chip; /* Unused parameter */
+
   
   TMR_Status ret;
   uint8_t msg[TMR_SR_MAX_PACKET_SIZE];

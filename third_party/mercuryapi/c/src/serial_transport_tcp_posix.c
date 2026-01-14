@@ -140,6 +140,8 @@ static TMR_Status
 tcp_sendBytes(TMR_SR_SerialTransport *this, uint32_t length, 
                 uint8_t* message, const uint32_t timeoutMs)
 {
+  (void)timeoutMs; /* Unused parameter */
+
   TMR_SR_SerialPortNativeContext *c;
   int ret;
 
@@ -260,6 +262,9 @@ tcp_shutdown(TMR_SR_SerialTransport *this)
 static TMR_Status
 tcp_flush(TMR_SR_SerialTransport *this)
 {
+  // Unused parameter
+  (void)this;
+
 
   /* This routine should empty any input or output buffers in the
    * communication channel. If there are no such buffers, it may do
