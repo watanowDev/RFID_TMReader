@@ -6,7 +6,7 @@
   "plan_timeout_ms": 500,
   "capacity": 128,
 
-  "write_power_cdbm": 2700,
+  "write_power_cdbm": 1000,
 
   "read_timeout_ms": 1000,
 

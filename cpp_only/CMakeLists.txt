@@ -147,6 +147,10 @@ endif()
 # mercuryapi_cpp.so 형태로 생성되도록 명시
 set_target_properties(mercuryapi_cpp PROPERTIES
         OUTPUT_NAME "mercuryapi_cpp"
+
+        VERSION     1.0.0      # 실제 파일 버전
+        SOVERSION   1          # SONAME (ABI 버전)
+
         DEBUG_POSTFIX "_d"
 )
 
