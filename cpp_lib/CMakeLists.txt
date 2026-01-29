@@ -21,6 +21,13 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
 )
 
 # ----------------------------
+# Install prefix 미입력 시 자동 할당
+# ----------------------------
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Install prefix" FORCE)
+endif()
+
+# ----------------------------
 # C 표준 지정 & 적용
 # ----------------------------
 set(CMAKE_C_STANDARD 99)
@@ -99,6 +106,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     # <-Wall> - 모든 경고 활성화
     # <-Wextra> - 추가 경고 활성화
     target_compile_options(mercuryapi_cpp PRIVATE -g -O0 -Wall -Wextra)
+
+    set(CMAKE_INSTALL_LIBDIR "debug/${CMAKE_INSTALL_LIBDIR}" CACHE PATH "" FORCE)
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
     # <OSDEP_POSIX> - POSIX OS 종속 코드 사용 매크로 정의
     target_compile_definitions(mercuryapi_cpp PRIVATE OSDEP_POSIX)
@@ -106,6 +115,8 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
     target_compile_options(mercuryapi_cpp PRIVATE -O3)
     # <-s> - 스트립 옵션 (디버그 심볼 제거)
     target_link_options(mercuryapi_cpp PRIVATE -s)
+
+    set(CMAKE_INSTALL_LIBDIR "release/${CMAKE_INSTALL_LIBDIR}" CACHE PATH "" FORCE)
 endif ()
 
 # ----------------------------
@@ -125,12 +136,12 @@ set_target_properties(mercuryapi_cpp PROPERTIES
 # ----------------------------
 install(TARGETS mercuryapi_cpp
         LIBRARY
-        DESTINATION lib/rfid/mercuryapi_cpp
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/rfid/mercuryapi_cpp"
         COMPONENT mercury_cpp
         NAMELINK_COMPONENT mercury_cpp
 
         ARCHIVE
-        DESTINATION lib/rfid/mercuryapi_cpp
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/rfid/mercuryapi_cpp"
         COMPONENT mercury_cpp
 
         RUNTIME
