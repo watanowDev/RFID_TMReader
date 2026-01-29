@@ -39,36 +39,35 @@
 │   └── src
 ├── install
 │   ├── debug
-│   │   ├── include
-│   │   │   └── rfid
-│   │   │       ├── mercuryapi
-│   │   │       └── mercuryapi_cpp
-│   │   └── lib
-│   │       └── rfid
-│   │           ├── mercuryapi
-│   │           └── mercuryapi_cpp
+│   │   └── rfid
+│   │       └── mercuryapi_cpp
+│   │           ├── libmercuryapi_cpp_d.so -> libmercuryapi_cpp_d.so.1
+│   │           ├── libmercuryapi_cpp_d.so.1 -> libmercuryapi_cpp_d.so.1.0.0
+│   │           └── libmercuryapi_cpp_d.so.1.0.0
+│   ├── include
+│   │   └── rfid
+│   │       └── mercuryapi_cpp
+│   │           └── mercuryapi.hpp
 │   └── release
-│       ├── include
-│       │   └── rfid
-│       │       ├── mercuryapi
-│       │       └── mercuryapi_cpp
-│       └── lib
-│           └── rfid
-│               ├── mercuryapi
-│               └── mercuryapi_cpp
-└── third_party
-    └── mercuryapi
-        └── c
-            ├── include
-            └── src
+│       └── rfid
+│           └── mercuryapi_cpp
+│               ├── libmercuryapi_cpp.so -> libmercuryapi_cpp.so.1
+│               ├── libmercuryapi_cpp.so.1 -> libmercuryapi_cpp.so.1.0.0
+│               └── libmercuryapi_cpp.so.1.0.0
+├── third_party
+│   └── mercuryapi
+│       └── c
+│           ├── include
+│           └── src
 ├── CMakeLists.txt
 └── README.md
+
 ```
 
 ### 디렉터리 설명
 
 | 디렉터리                     | 설명                                                                                                     |
-| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+|--------------------------| ------------------------------------------------------------------------------------------------------ |
 | c_lib                    | C99 기반 C 래퍼 라이브러리 (.so) 생성용 CMake 프로젝트. `libmercuryapi.so` / `libmercuryapi_d.so` 생성                   |
 | cpp_lib                  | C99 + C++17 기반 C++ 래퍼 라이브러리 (.so) 생성용 CMake 프로젝트. `libmercuryapi_cpp.so` / `libmercuryapi_cpp_d.so` 생성 |
 | c_test                   | `c_lib` 결과물 테스트 프로젝트                                                                                   |
@@ -78,7 +77,8 @@
 | cpp_test/config          | C++ 테스트 프로젝트 설정 파일                                                                                     |
 | cpp_test/src             | C++ 테스트 코드                                                                                             |
 | c_test/src               | C 테스트 코드                                                                                               |
-| install/debug            | 디버깅용 빌드 결과물. `include`와 `lib` 하위에 각각 `rfid/mercuryapi`와 `rfid/mercuryapi_cpp` 결과물이 존재                  |
+| install/include          | Debug/Release 공통 헤더 파일.                  |
+| install/debug            | 디버그용 라이브러리 설치 위치. rfid/mercuryapi_cpp 하위에 libmercuryapi_cpp_d.so* 생성                  |
 | install/release          | 배포용 빌드 결과물. 구조는 debug와 동일하지만 최적화된 릴리스 빌드                                                               |
 | third_party/mercuryapi/c | ThingMagic MercuryAPI C SDK 원본 코드 (`include`와 `src`)                                                   |
 
@@ -97,36 +97,16 @@
 ### 특징
 
 * `install` 폴더는 빌드 시 **자동 생성**됩니다.
-* Build 경로와 install 경로를 지정하려면 하기의 방법을 따릅니다.
-
-#### Build 경로 설정
-
-1. 동일하게 CLion 설정 열기 (단축키: `Ctrl+Alt+S`)
-2. **빌드, 실행, 배포** 탭 선택 → **CMake** 탭 선택
-3. 하단 위치한 **[빌드 디렉터리]** 입력
-
-```
-build/debug  # 또는 release
-```
-
-#### Install 경로 설정
-
-1. CLion 설정 열기 (단축키: `Ctrl+Alt+S`)
-2. **빌드, 실행, 배포** 탭 선택 → **CMake** 탭 선택
-3. 상단 위치한 **[CMake 옵션] Edit**란에 아래 입력
-
-```
--DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_SOURCE_DIR}/install/debug  # 또는 release
-```
 
 ---
 
 ## Install 결과물
 
-| 디렉터리              | 설명 |
-|-------------------|------|
-| `install/debug`   | Debug 빌드 결과물 |
-| `install/release` | Release 빌드 결과물 |
+| 디렉터리              | 설명                 |
+|-------------------|--------------------|
+| `install/include` | ㅣLibrary 참조 header |
+| `install/debug`   | Debug 빌드 결과물       |
+| `install/release` | Release 빌드 결과물     |
 
 해당 디렉터리에는 다음 항목들이 포함됩니다.
 
